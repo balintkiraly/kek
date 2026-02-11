@@ -11,23 +11,29 @@ export const MessageList: React.FC<MessageListProps> = ({
   messages,
   isLoading,
 }) => (
-  <div className="w-full">
+  <div
+    className="w-full"
+    role="log"
+    aria-label="Beszélgetés"
+    aria-live="polite"
+    aria-busy={isLoading}
+  >
     {messages.length === 0 && !isLoading && (
-      <div className="flex items-center justify-center h-64 text-gray-500 dark:text-gray-400">
-        <p className="text-lg">Kezdj egy beszélgetést!</p>
+      <div className="flex items-center justify-center h-64 text-[#374151] dark:text-[#d1d5db]" role="status">
+        <p className="text-2xl font-medium">Kezdj egy beszélgetést!</p>
       </div>
     )}
     {messages.map((msg, index) => (
       <MessageBubble key={index} role={msg.role} content={msg.content} />
     ))}
     {isLoading && (
-      <div className="flex justify-start mb-4">
-        <div className="bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 px-4 py-3 rounded-lg rounded-bl-none shadow-sm">
-          <div className="text-sm font-semibold mb-1 text-gray-600 dark:text-gray-400">Kéki</div>
-          <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce"></div>
-            <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-            <div className="w-2 h-2 bg-gray-500 dark:bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+      <div className="flex justify-start mb-5" role="status" aria-live="polite" aria-label="Kéki válaszol">
+        <div className="bg-[#e5e7eb] text-[#0d0d0d] dark:bg-[#374151] dark:text-[#f5f5f5] px-5 py-4 rounded-xl rounded-bl-none shadow-sm">
+          <p className="text-xl font-semibold mb-1.5 m-0 text-[#374151] dark:text-[#d1d5db]">Kéki</p>
+          <div className="flex items-center gap-2 loading-dots" aria-hidden="true">
+            <span className="w-3 h-3 bg-[#4b5563] dark:bg-[#9ca3af] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+            <span className="w-3 h-3 bg-[#4b5563] dark:bg-[#9ca3af] rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+            <span className="w-3 h-3 bg-[#4b5563] dark:bg-[#9ca3af] rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
           </div>
         </div>
       </div>

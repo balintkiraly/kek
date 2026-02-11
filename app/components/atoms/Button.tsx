@@ -1,20 +1,21 @@
 import React from "react";
 
 interface ButtonProps {
-  value: string;
+  children: React.ReactNode;
   className?: string;
   disabled?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  value,
+  children,
   className = "",
   disabled = false,
 }) => (
-  <input
+  <button
     type="submit"
-    value={value}
     disabled={disabled}
-    className={`mt-4 rounded-md bg-blue-600 px-5 py-4 text-white text-lg leading-relaxed hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-blue-900 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
-  />
+    className={`mt-4 rounded-xl bg-[#333366] px-6 py-4 text-white text-xl font-semibold leading-relaxed hover:bg-[#2a2a55] focus:outline-none focus:ring-2 focus:ring-[#333366] focus:ring-offset-2 dark:focus:ring-offset-[#0f0f0f] disabled:opacity-50 disabled:cursor-not-allowed min-h-[3.25rem] ${className}`}
+  >
+    {children}
+  </button>
 );

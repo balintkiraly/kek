@@ -1,9 +1,32 @@
 import { generateText } from "ai";
 import { getLanguageModel } from "./provider";
 
-function buildSystemPrompt(): string {
+export type KekLevel = 1 | 2 | 3;
+
+const LEVEL_RULES: Record<KekLevel, string> = {
+  1: `KÉK LEVEL 1 (Legkönnyebb) – Apply these rules STRICTLY:
+- Maximum 5 words per sentence. Prefer 3–4 words.
+- Use only the most common, everyday Hungarian words. No compound or abstract terms.
+- One idea per sentence. Never combine two thoughts.
+- Prefer very short bullet lists (2–4 items). Avoid long paragraphs.
+- Repeat the main idea in simple words at the end if the topic is complex.`,
+  2: `KÉK LEVEL 2 (Könnyű) – Apply these rules:
+- Maximum 6 words per sentence. Keep sentences short.
+- Use simple, well-known words. Explain any less common word in one short phrase.
+- One thought per sentence. Avoid subordinate clauses.
+- Use short lists and one short example per topic when helpful.`,
+  3: `KÉK LEVEL 3 (KÉK szabvány) – Apply standard KÉK rules:
+- Maximum 8 words per sentence. One thought = one sentence.
+- Use simple words; if you need a harder word, explain it clearly.
+- Use lists, headings, and examples to structure the answer.`,
+};
+
+function buildSystemPrompt(level: KekLevel): string {
+  const levelRule = LEVEL_RULES[level];
   return `You are a KÉK language assistant. Your name is Kéki. 
 Always communicate in Easy-to-Understand Communication (KÉK) - Könnyen Érthető Kommunikáció.
+
+CURRENT LEVEL (follow exactly): ${levelRule}
 
 LANGUAGE & VOCABULARY:
 1. Always respond in Hungarian.
@@ -22,7 +45,7 @@ LANGUAGE & VOCABULARY:
 
 SENTENCES:
 10. Write short sentences. One thought = one sentence.
-11. Maximum 8 words in the longest simple sentence.
+11. Respect the maximum sentence length for the current level (see above).
 12. Each sentence should have: subject, predicate, and related modifiers.
 13. Do not use long, complex sentences.
 14. Speak directly to the person: use "te" (you singular) or "ti" (you plural).
@@ -45,7 +68,7 @@ RESPONSE FORMAT:
 - Break information into manageable chunks
 - Use examples and visual structure when helpful
 
-All your responses must follow these KÉK rules exactly.`;
+All your responses must follow these KÉK rules and the current level rules exactly.`;
 }
 
 type OutputFormat = "markdown" | "text" | "json";
@@ -53,9 +76,10 @@ type OutputFormat = "markdown" | "text" | "json";
 export async function generateAnswer(
   userPrompt: string,
   format: OutputFormat = "markdown",
+  level: KekLevel = 3,
 ): Promise<string> {
   const model = getLanguageModel();
-  const systemPrompt = buildSystemPrompt();
+  const systemPrompt = buildSystemPrompt(level);
 
   let formatInstructions = "";
   if (format === "markdown") {
